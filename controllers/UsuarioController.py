@@ -8,12 +8,12 @@ class UsuarioController:
     def __init__(self):
         print("Usuario Instanciado")
 
-    def index(self):
+    def index(self, menu):
         data = form.UsuarioForm()
         lista = self.getAll()
         cant_elements = 0
         if len(lista)>0: cant_elements = len(lista[0])
-        return render_template('UsuarioView.html', form=[data, lista, len(lista[0])])
+        return render_template('UsuarioView.html', form=[data, lista, cant_elements, menu])
 
     def save(self, request):
         info = form.UsuarioForm()

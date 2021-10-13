@@ -8,12 +8,12 @@ class ProductoController:
     def __init__(self):
         print("Producto Instanciado")
 
-    def index(self):
+    def index(self, menu):
         data = form.ProductoForm()
         lista = self.getAll()
         cant_elements = 0
         if len(lista)>0: cant_elements = len(lista[0])
-        return render_template('ProductoView.html', form=[data, lista, cant_elements])
+        return render_template('ProductoView.html', form=[data, lista, cant_elements, menu])
 
     def save(self, request):
         info = form.ProductoForm()
