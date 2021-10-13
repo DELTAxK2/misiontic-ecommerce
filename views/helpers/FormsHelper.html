@@ -1,0 +1,32 @@
+{% macro generateForm(form) %}
+	<div class="container">
+		<div class="row">
+			{{ form.csrf_token }}
+			{% for field in form %}
+				{% if field.type != 'CSRFTokenField' and field.type != 'SubmitField'%}
+						<div class="form-group col-sm-4 col-md-4 col-lg-4 col-xl-4" style="margin-top:20px;">
+							<input type='hidden' name='id' id="id" value=""/>
+							{{ field.label }}
+							{% if field.errors %}
+								{{ field(class='form-control is-invalid') }}
+							{% else %}
+								{{ field(class='form-control') }}
+							{% endif %}
+							{% for error in field.errors %}
+								<div class="invalid-feedback">{{ error }}</div>
+							{% endfor %}
+						</div>
+
+				{% else %}
+				<div class="row">
+					<div class="form-group col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top:20px;">
+						<div class="form-group col-sm-2 col-md-2 col-lg-2 col-xl-2" style="margin-top:20px;">
+							{{ field() }}
+						</div>
+					</div>
+				</div>
+				{% endif %}
+			{% endfor %}
+			</div>
+	</div>
+{% endmacro %}
