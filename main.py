@@ -25,6 +25,11 @@ usuario_session = 1
 rol_ctrl = RolController()
 menu = rol_ctrl.getMenu(usuario_session)
 
+#---- Login ----
+@app.route('/login/')
+def logIn():
+    return render_template('LoginView.html')
+
 # ------ Compra ---------
 compra_ctrl = CompraController()
 

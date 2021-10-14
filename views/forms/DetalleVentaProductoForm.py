@@ -4,7 +4,7 @@ from wtforms import StringField, FloatField
 from wtforms.validators import InputRequired
 
 
-class DetalleVentaProducto(FlaskForm):
+class DetalleVentaProductoForm(FlaskForm):
     compra = StringField('Codigo Venta', validators=[InputRequired()])
     producto = StringField('Codigo Producto', validators=[InputRequired()])
     cantidad = FloatField('Cantidad', validators=[InputRequired()])
