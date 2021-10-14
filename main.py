@@ -18,7 +18,7 @@ app.secret_key = os.urandom(24)
 
 @app.route('/')
 def home():
-    return render_template('helpers/Template.html')
+    return render_template('index.html')
 
 # ---- Generación de Menu ----
 usuario_session = 1
