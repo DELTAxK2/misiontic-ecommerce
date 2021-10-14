@@ -24,7 +24,7 @@ class ProductoController:
             precio_venta = info.precio_venta.data
             existencias = info.existencias.data
             imagen = info.imagen.data
-            fecha_registro = datetime.now().strftime("%Y-%m-%d %H:%M:?")
+            fecha_registro = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             usuario_registro = 1
             estado = 1
             try:
