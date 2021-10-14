@@ -13,9 +13,5 @@ class ProductoForm(FlaskForm):
     precio_venta = FloatField('Precio Venta', validators=[InputRequired()])
     existencias = StringField('Existencias', validators=[InputRequired()])
     imagen = FileField('Imagen')
-    #fecha_registro = StringField('fecha_registro')
-    #usuario_registro = StringField('usuario_registro')
-    #estado = StringField('estado')
-    #btnRegistrar = SubmitField('Registrar', render_kw={"class": "btn btn-primary"})
 
 

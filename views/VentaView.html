@@ -1,0 +1,21 @@
+{% from 'helpers/Template.html' import StartTemplate with context %}
+{{  StartTemplate(form[3]) }}
+		<div class="container">
+			<div class="container-form">
+				<h1>Ventas</h1>
+				<form action="" method="post">
+					{% from 'helpers/FormsHelper.html' import generateForm with context %}
+					{{ generateForm(form[0]) }}
+				</form>
+			</div>
+			<div class="container-buttons">
+				{% from 'helpers/ButtonsHelper.html' import generateButtons with context %}
+				{{ generateButtons() }}
+			</div>
+			<div class="container-table">
+				{% from 'helpers/TableHelper.html' import generateTable with context %}
+				{{ generateTable(form) }}
+			</div>
+		</div>
+{% from 'helpers/Template.html' import EndTemplate with context %}
+{{ EndTemplate() }}
