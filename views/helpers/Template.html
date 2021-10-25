@@ -78,14 +78,10 @@
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
           </div>
-          <ul class="navbar-nav  justify-content-end">
-            <li class="nav-item d-flex align-items-center">
-              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0" style="color: white !important; font-family: 'Montserrat';">
-                <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Sign In</span>
-              </a>
-            </li>
-          </ul>
+				<div class="col-lg-2 header-right mt-lg-0 mt-2 float-right welcome-user">
+					<a href="javascript:void(0)" onclick="cerrarSesion()" style="color:#EE216A !important;
+					text-decoration: none; font-weight: bold !important;">Cerrar Sesión</a>
+				</div>
         </div>
       </div>
     </nav>
@@ -163,7 +159,7 @@
   <script  src="{{ url_for('static',filename='template/assets/js/core/popper.min.js') }}"></script>
   <script  src="{{ url_for('static',filename='template/assets/js/plugins/perfect-scrollbar.min.js') }}"></script>
   <script  src="{{ url_for('static',filename='template/assets/js/plugins/smooth-scrollbar.min.js') }}"></script>
-  <script>
+  <script type = 'text/javascript'>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
       var options = {

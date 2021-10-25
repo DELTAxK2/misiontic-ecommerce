@@ -1,4 +1,6 @@
-from flask import Flask, jsonify, request, render_template
+from builtins import len
+
+from flask import Flask, jsonify, request, render_template, session
 from controllers.UsuarioController import UsuarioController
 from controllers.ProductoController import ProductoController
 from controllers.RolController import RolController
@@ -16,26 +18,23 @@ app = Flask(__name__, template_folder='views')
 Bootstrap(app)
 app.secret_key = os.urandom(24)
 
-@app.route('/')
+@app.before_request
+def session_management():
+  session.permanent = True
+
+@app.route('/home/')
 def home():
     return render_template('index.html')
 
-# ---- Generación de Menu ----
-usuario_session = 1
-rol_ctrl = RolController()
-menu = rol_ctrl.getMenu(usuario_session)
-
-#---- Login ----
-@app.route('/login/')
-def logIn():
-    return render_template('LoginView.html')
+# ---- Valores  ----
+menu =  None
 
 # ------ Compra ---------
 compra_ctrl = CompraController()
 
 @app.route('/compras/')
 def homeCompra():
-    return compra_ctrl.index(menu)
+    return compra_ctrl.index(session['menu'])
 
 @app.route('/compras/save')
 def saveCompra():
@@ -46,7 +45,7 @@ detallecompra_ctrl = DetalleCompraProductoController()
 
 @app.route('/detallecompras/')
 def homeDetalleCompra():
-    return detallecompra_ctrl.index(menu)
+    return detallecompra_ctrl.index(session['menu'])
 
 @app.route('/detallecompras/save')
 def saveDetalleCompra():
@@ -57,7 +56,7 @@ venta_ctrl = VentaController()
 
 @app.route('/ventas/')
 def homeVenta():
-    return venta_ctrl.index(menu)
+    return venta_ctrl.index(session['menu'])
 
 @app.route('/ventas/save')
 def saveVenta():
@@ -68,7 +67,7 @@ detalleventa_ctrl = DetalleVentaProductoController()
 
 @app.route('/detalleventas/')
 def homeDetalleVenta():
-    return detalleventa_ctrl.index(menu)
+    return detalleventa_ctrl.index(session['menu'])
 
 @app.route('/detalleventas/save')
 def saveDetalleVenta():
@@ -80,7 +79,7 @@ proveedor_ctrl = ProveedorController()
 
 @app.route('/proveedores/')
 def homeProveedor():
-    return proveedor_ctrl.index(menu)
+    return proveedor_ctrl.index(session['menu'])
 
 @app.route('/proveedores/save')
 def saveProveedor():
@@ -92,19 +91,50 @@ usuario_ctrl = UsuarioController()
 
 @app.route('/usuarios/')
 def homeUsuario():
-    return usuario_ctrl.index(menu)
+    return usuario_ctrl.index(session['menu'])
 
 @app.route('/usuario/save')
 def saveUsuario():
     return usuario_ctrl.save(request)
 
+@app.route('/login/', methods=['GET'])
+def logIn():
+    view = ''
+    output = ''
+    if request.method == 'GET':
+        usuario_data = usuario_ctrl.login(request)
+        if usuario_data != None:
+            rol_ctrl = RolController()
+            session.clear()
+            session["menu"] = rol_ctrl.getMenu(usuario_data[0])
+            session["usuario_session"] = usuario_data[0]
+            session["info_usuario"] = usuario_data[3]
+            session["rol_session"] = usuario_data[11]
+            session['user_is_logged'] = True
+            output = dict(error=False, output=usuario_data)
+        else:
+            output = dict(error=True, output='El usuario y la contraseña suministrada no son consistentes')
+    return output
+
+@app.route('/', methods=['GET'])
+def inciarsesion():
+    output = None
+    if menu is not None:
+        session['user_is_logged'] = False
+    return render_template('LoginView.html', output=output)
+
+@app.route('/destroy_session', methods=['GET'])
+def destroysession():
+    session.clear()
+    output = None
+    return render_template('LoginView.html', output=output)
 # ----- Productos ---------
 
 producto_ctrl = ProductoController()
 
 @app.route('/productos/')
 def homeProducto():
-    return producto_ctrl.index(menu)
+    return producto_ctrl.index(session['menu'])
 
 @app.route('/productos/save')
 def saveProducto():

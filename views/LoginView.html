@@ -21,9 +21,22 @@
   <link rel="stylesheet" href="{{ url_for('static',filename='libs/bootstrap/css/bootstrap-reboot.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static',filename='libs/bootstrap/css/bootstrap-utilities.min.css') }}">
 	<script src="{{ url_for('static',filename='libs/jquery.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/custom.js') }}"></script>
 </head>
 <body>
+	{% if session['user_is_logged'] : %}
+		<script type="text/javascript">
+			$(document).ready(function(){
+				window.open('/home',"_self");
+			})
+		</script>
+	{% endif %}
 <div class="container">
+	{% if output != None%}
+		{% if output.error == True%}
+			<div style="text-align:center; font-family: 'Montserrat'; color:white;">{{ JILIAR }}</div>
+		{% endif %}
+	{% endif %}
 	<div class="d-flex justify-content-center h-100">
 		<div class="card">
 			<div class="card-header">
@@ -35,27 +48,27 @@
 				</div>
 			</div>
 			<div class="card-body">
-				<form>
+				<!--<form action="login/" method="get">-->
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
-						<input type="text" class="form-control" placeholder="username">
+						<input type="text" class="form-control" placeholder="user" id="user" name="user">
 
 					</div>
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-key"></i></span>
 						</div>
-						<input type="password" class="form-control" placeholder="password">
+						<input type="password" class="form-control" placeholder="password" id="password" name="password">
 					</div>
 					<div class="row align-items-center remember">
 						<input type="checkbox">Recuerdame
 					</div>
 					<div class="form-group">
-						<input type="submit" value="Login" class="btn float-right login_btn">
+						<input type="submit" value="Login" class="btn float-right login_btn"  id="btnIniciar" onclick="iniciarSesion()">
 					</div>
-				</form>
+				<!--</form>-->
 			</div>
 			<div class="card-footer">
 				<div class="d-flex justify-content-center links">

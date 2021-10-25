@@ -29,7 +29,8 @@ class RolController:
             with sqlite3.connect('db/ecommerceDB.db') as connection:
                 cur = connection.cursor()
                 query = 'SELECT m.* FROM menu m INNER JOIN detalle_menu_rol d ON d.id_menu = m.id ' \
-                        'INNER JOIN usuarios u ON u.id_rol = d.id_rol WHERE u.id = ? AND u.estado = 1 AND m.estado = 1'
+                        'INNER JOIN usuarios u ON u.id_rol = d.id_rol WHERE u.id = ? AND u.estado = 1 AND m.estado = 1 ' \
+                        'ORDER BY m.orden ASC'
                 cur.execute(query, (str(usuario)))
                 rows = cur.fetchall()
         except BaseException as e:

@@ -2,6 +2,8 @@ import sqlite3
 from views.forms import UsuarioForm as form
 from flask import render_template
 from datetime import datetime
+from werkzeug.security import check_password_hash as checkph
+from werkzeug.security import generate_password_hash as genph
 
 class UsuarioController:
 
@@ -14,6 +16,27 @@ class UsuarioController:
         cant_elements = 0
         if len(lista)>0: cant_elements = len(lista[0])
         return render_template('UsuarioView.html', form=[data, lista, cant_elements, menu])
+
+    def login(self, request):
+        user = request.args['user']
+        password = request.args['password']
+        rows = None
+        if request.method == 'GET':
+            try:
+                with sqlite3.connect('db/ecommerceDB.db') as connection:
+                    cur = connection.cursor()
+                    query = 'SELECT u.* FROM usuarios u WHERE u.user = ? AND u.estado = ?'
+                    cur.execute(query, (user, 1))
+                    rows = cur.fetchone()
+                    flag = checkph(rows[13], password)
+                    if flag:
+                        return rows
+                    else:
+                        return None
+            except BaseException as e:
+                print('Error al intentar obtener Usuario ' + e.__str__())
+                return rows
+
 
     def save(self, request):
         info = form.UsuarioForm()
