@@ -1,9 +1,9 @@
 import sqlite3
 from views.forms import DetalleCompraProductoForm as form
-from flask import render_template
+from flask import render_template, session
 from datetime import datetime
 
-class DetalleCompraProductoController:
+class DetalleCompraProducto:
 
     def __init__(self):
         print("Detalle de compra Instanciada")
@@ -12,8 +12,11 @@ class DetalleCompraProductoController:
         data = form.DetalleCompraProductoForm()
         lista = self.getAll()
         cant_elements = 0
-        if len(lista)>0: cant_elements = len(lista[0])
-        return render_template('DetalleCompraProductoView.html', form=[data, lista, cant_elements, menu])
+        if len(lista)>0 : cant_elements = len(lista[0])+1
+        if session.get('menu') is not None:
+            return render_template('DetalleCompraProductoView.html', form=[data, lista, cant_elements, menu])
+        else:
+            return render_template('LoginView.html')
 
     def save(self, request):
         info = form.DetalleCompraProductoForm()

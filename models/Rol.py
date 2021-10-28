@@ -1,6 +1,6 @@
 import sqlite3
 
-class RolController:
+class Rol:
 
     def __init__(self):
         print("Rol Instanciado")

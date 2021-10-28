@@ -1,9 +1,9 @@
 import sqlite3
 from views.forms import ProveedorForm as form
-from flask import render_template
+from flask import render_template, session
 from datetime import datetime
 
-class ProveedorController:
+class Proveedor:
 
     def __init__(self):
         print("Proveedor Instanciado")
@@ -12,8 +12,11 @@ class ProveedorController:
         data = form.ProveedorForm()
         lista = self.getAll()
         cant_elements = 0
-        if len(lista)>0: cant_elements = len(lista[0])
-        return render_template('ProveedorView.html', form=[data, lista, cant_elements, menu])
+        if len(lista) > 0: cant_elements = len(lista[0]) + 1
+        if session.get('menu') is not None:
+            return render_template('ProveedorView.html', form=[data, lista, cant_elements, menu])
+        else:
+            return render_template('LoginView.html')
 
     def save(self, request):
         info = form.ProveedorForm()

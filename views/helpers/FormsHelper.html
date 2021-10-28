@@ -1,11 +1,11 @@
 {% macro generateForm(form) %}
 	<div class="container">
+		<input type='hidden' name='id' id="id" value=""/>
 		<div class="row">
 			{{ form.csrf_token }}
 			{% for field in form %}
 				{% if field.type != 'CSRFTokenField' and field.type != 'SubmitField'%}
 						<div class="form-group col-sm-4 col-md-4 col-lg-4 col-xl-4" style="margin-top:20px;">
-							<input type='hidden' name='id' id="id" value=""/>
 							{{ field.label }}
 							{% if field.errors %}
 								{{ field(class='form-control is-invalid') }}

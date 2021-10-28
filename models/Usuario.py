@@ -1,11 +1,11 @@
 import sqlite3
 from views.forms import UsuarioForm as form
-from flask import render_template
+from flask import render_template, session
 from datetime import datetime
 from werkzeug.security import check_password_hash as checkph
 from werkzeug.security import generate_password_hash as genph
 
-class UsuarioController:
+class Usuario:
 
     def __init__(self):
         print("Usuario Instanciado")
@@ -14,8 +14,12 @@ class UsuarioController:
         data = form.UsuarioForm()
         lista = self.getAll()
         cant_elements = 0
-        if len(lista)>0: cant_elements = len(lista[0])
-        return render_template('UsuarioView.html', form=[data, lista, cant_elements, menu])
+        if len(lista) > 0 : cant_elements = len(lista[0]) + 1
+        if session.get('menu') is not None:
+            return render_template('UsuarioView.html', form=[data, lista, cant_elements, menu])
+        else:
+            return render_template('LoginView.html')
+
 
     def login(self, request):
         user = request.args['user']
@@ -69,14 +73,14 @@ class UsuarioController:
             except BaseException as e:
                 return 'Error al intentar registrar Usuario '+e.__str__()
 
-    def get(self, request, id):
+    def get(self, request):
         if request.method == 'GET':
             rows = None
             try:
                 with sqlite3.connect('db/ecommerceDB.db') as connection:
                     cur = connection.cursor()
-                    query = 'SELECT * FROM usuarios WHERE estado = 1 AND identificacion = ?'
-                    cur.execute(query, (id))
+                    query = 'SELECT * FROM usuarios WHERE estado = 1 AND id = ?'
+                    cur.execute(query, (request.args['id']))
                     rows = cur.fetchone()
                 return rows
             except BaseException as e:
@@ -128,7 +132,16 @@ class UsuarioController:
         rows = None
         with sqlite3.connect('db/ecommerceDB.db') as connection:
             cur = connection.cursor()
-            query = 'SELECT * FROM usuarios WHERE estado = 1'
+            query = 'SELECT ' \
+                    'u.id AS ID, t.nombre AS TIPO_ID, u.identificacion IDENTIFICACION, u.nombre1 AS NOMBRE1, ' \
+                    'u.nombre2 AS NOMBRE2, u.apellido1 AS APELLIDO1, u.apellido2 AS APELLIDO2, u.email AS EMAIL, ' \
+                    'u.telefono AS TELEFONO, u.celular AS CELULAR, u.direccion AS DIRECCION, r.nombre AS ROL, ' \
+                    'u.fecha_registro AS FECHA_REG ' \
+                    'FROM usuarios u ' \
+                    'INNER JOIN tipos_identificacion t ON t.id = u.tipo_id ' \
+                    'INNER JOIN roles r ON r.id = u.id_rol ' \
+                    'WHERE u.estado = 1'
+
             cur.execute(query)
             rows = cur.fetchall()
         return rows

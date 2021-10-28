@@ -1,6 +1,6 @@
 import sqlite3
 
-class TiposIdentificacionController:
+class TiposIdentificacion:
 
     def __init__(self):
         print("Tipo de Identificación Instanciado")

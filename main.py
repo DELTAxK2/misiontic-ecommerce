@@ -1,14 +1,14 @@
 from builtins import len
 
 from flask import Flask, jsonify, request, render_template, session
-from controllers.UsuarioController import UsuarioController
-from controllers.ProductoController import ProductoController
-from controllers.RolController import RolController
-from controllers.CompraController import CompraController
-from controllers.DetalleCompraProductoController import DetalleCompraProductoController
-from controllers.DetalleVentaProductoController import DetalleVentaProductoController
-from controllers.ProveedorController import ProveedorController
-from controllers.VentaController import VentaController
+from models.Usuario import Usuario
+from models.Producto import Producto
+from models.Rol import Rol
+from models.Compra import Compra
+from models.DetalleCompraProducto import DetalleCompraProducto
+from models.DetalleVentaProducto import DetalleVentaProducto
+from models.Proveedor import Proveedor
+from models.Venta import Venta
 
 from flask_bootstrap import Bootstrap
 import os
@@ -30,18 +30,27 @@ def home():
 menu =  None
 
 # ------ Compra ---------
-compra_ctrl = CompraController()
+compra_ctrl = Compra()
 
 @app.route('/compras/')
 def homeCompra():
     return compra_ctrl.index(session['menu'])
+
+@app.route('/compras/get', methods=['GET'])
+def getCompras():
+    compra_data = compra_ctrl.get(request)
+    if compra_data != None:
+        output = dict(error=False, output=compra_data)
+    else:
+        output = dict(error=True, output='Compra no encontrada')
+    return output
 
 @app.route('/compras/save')
 def saveCompra():
     return compra_ctrl.save(request)
 
 # ------ Detalle de la Compra ---------
-detallecompra_ctrl = DetalleCompraProductoController()
+detallecompra_ctrl = DetalleCompraProducto()
 
 @app.route('/detallecompras/')
 def homeDetalleCompra():
@@ -51,8 +60,17 @@ def homeDetalleCompra():
 def saveDetalleCompra():
     return detallecompra_ctrl.save(request)
 
+@app.route('/detallecompras/get', methods=['GET'])
+def getDetalleCompras():
+    compra_data = detallecompra_ctrl.get(request)
+    if compra_data != None:
+        output = dict(error=False, output=compra_data)
+    else:
+        output = dict(error=True, output='Detalles de compra no encontrada')
+    return output
+
 # ------ Venta ---------
-venta_ctrl = VentaController()
+venta_ctrl = Venta()
 
 @app.route('/ventas/')
 def homeVenta():
@@ -62,8 +80,17 @@ def homeVenta():
 def saveVenta():
     return venta_ctrl.save(request)
 
+@app.route('/ventas/get', methods=['GET'])
+def getVentas():
+    compra_data = venta_ctrl.get(request)
+    if compra_data != None:
+        output = dict(error=False, output=compra_data)
+    else:
+        output = dict(error=True, output='Venta no encontrada')
+    return output
+
 # ------ Detalle de la Venta ---------
-detalleventa_ctrl = DetalleVentaProductoController()
+detalleventa_ctrl = DetalleVentaProducto()
 
 @app.route('/detalleventas/')
 def homeDetalleVenta():
@@ -73,9 +100,17 @@ def homeDetalleVenta():
 def saveDetalleVenta():
     return detalleventa_ctrl.save(request)
 
+@app.route('/detalleventas/get', methods=['GET'])
+def getDetalleVentas():
+    detalleventa_data = detalleventa_ctrl.get(request)
+    if detalleventa_data != None:
+        output = dict(error=False, output=detalleventa_data)
+    else:
+        output = dict(error=True, output='Detalles de venta no encontrada')
+    return output
 # ------ Proveedor ---------
 
-proveedor_ctrl = ProveedorController()
+proveedor_ctrl = Proveedor()
 
 @app.route('/proveedores/')
 def homeProveedor():
@@ -85,17 +120,34 @@ def homeProveedor():
 def saveProveedor():
     return proveedor_ctrl.save(request)
 
+@app.route('/proveedores/get', methods=['GET'])
+def getProveedores():
+    proveedores_data = proveedor_ctrl.get(request)
+    if proveedores_data != None:
+        output = dict(error=False, output=proveedores_data)
+    else:
+        output = dict(error=True, output='Proveedor no encontrado')
+    return output
 # ------ Usuarios ---------
 
-usuario_ctrl = UsuarioController()
+usuario_ctrl = Usuario()
 
 @app.route('/usuarios/')
 def homeUsuario():
     return usuario_ctrl.index(session['menu'])
 
-@app.route('/usuario/save')
+@app.route('/usuarios/save')
 def saveUsuario():
     return usuario_ctrl.save(request)
+
+@app.route('/usuarios/get', methods=['GET'])
+def getUsuario():
+    usuario_data = usuario_ctrl.get(request)
+    if usuario_data != None:
+        output = dict(error=False, output=usuario_data)
+    else:
+        output = dict(error=True, output='Usuario no encontrado')
+    return output
 
 @app.route('/login/', methods=['GET'])
 def logIn():
@@ -104,7 +156,7 @@ def logIn():
     if request.method == 'GET':
         usuario_data = usuario_ctrl.login(request)
         if usuario_data != None:
-            rol_ctrl = RolController()
+            rol_ctrl = Rol()
             session.clear()
             session["menu"] = rol_ctrl.getMenu(usuario_data[0])
             session["usuario_session"] = usuario_data[0]
@@ -130,7 +182,7 @@ def destroysession():
     return render_template('LoginView.html', output=output)
 # ----- Productos ---------
 
-producto_ctrl = ProductoController()
+producto_ctrl = Producto()
 
 @app.route('/productos/')
 def homeProducto():
@@ -139,6 +191,15 @@ def homeProducto():
 @app.route('/productos/save')
 def saveProducto():
     return producto_ctrl.save(request)
+
+@app.route('/productos/get', methods=['GET'])
+def getProductos():
+    producto_data = producto_ctrl.get(request)
+    if producto_data != None:
+        output = dict(error=False, output=producto_data)
+    else:
+        output = dict(error=True, output='Producto no encontrado')
+    return output
 
 # -------- Exec --------
 
