@@ -69,7 +69,7 @@ class Usuario:
                             direccion, id_rol, fecha_registro, usuario_registro, estado)
                     cur.execute(query, data)
                     conexion.commit()
-                    return 'Usuario Guardado exitosamente'
+                    return True
             except BaseException as e:
                 return 'Error al intentar registrar Usuario '+e.__str__()
 
@@ -90,18 +90,18 @@ class Usuario:
     def update(self, request):
         info = form.UsuarioForm()
         if request.method == 'PUT':
-            id = info.id.data
-            tipo_id = info.tipo_id.data
-            identificacion = info.identificacion.data
-            nombre1 = info.nombre1.data
-            nombre2 = info.nombre2.data
-            apellido1 = info.apellido1.data
-            apellido2 = info.apellido2.data
-            email = info.email.data
-            telefono = info.telefono.data
-            celular = info.celular.data
-            direccion = info.direccion.data
-            id_rol = info.id_rol.data
+            id = request.args['id']
+            tipo_id = request.args['tipo_id']
+            identificacion = request.args['identificacion']
+            nombre1 = request.args['nombre1']
+            nombre2 = request.args['nombre2']
+            apellido1 = request.args['apellido1']
+            apellido2 = request.args['apellido2']
+            email = request.args['email']
+            telefono = request.args['telefono']
+            celular = request.args['celular']
+            direccion = request.args['direccion']
+            id_rol = request.args['id_rol']
             try:
                 with sqlite3.connect('db/ecommerceDB.db') as conexion:
                     cur = conexion.cursor()
@@ -111,20 +111,20 @@ class Usuario:
                             direccion, id_rol, id)
                     cur.execute(query, data)
                     conexion.commit()
-                    return 'Usuario actualizado exitosamente'
+                    return True
             except BaseException as e:
                 return 'Error al intentar registrar Usuario '+e.__str__()
 
 
-    def delete(self, request, id):
+    def delete(self, request):
         if request.method == 'DELETE':
             try:
                 with sqlite3.connect('db/ecommerceDB.db') as conexion:
                     cur = conexion.cursor()
                     query = 'UPDATE usuarios SET estado = 2 WHERE id = ?'
-                    cur.execute(query, (id))
+                    cur.execute(query, (request.args['id']))
                     conexion.commit()
-                    return 'Usuario Eliminado exitosamente'
+                    return True
             except BaseException as e:
                 return 'Error al intentar registrar Usuario '+e.__str__()
 
@@ -141,7 +141,6 @@ class Usuario:
                     'INNER JOIN tipos_identificacion t ON t.id = u.tipo_id ' \
                     'INNER JOIN roles r ON r.id = u.id_rol ' \
                     'WHERE u.estado = 1'
-
             cur.execute(query)
             rows = cur.fetchall()
         return rows

@@ -47,12 +47,27 @@ function cbxAnalyze(id){
     }
 }
 
-function getComponentes(form){
-     var componentes = []
+function getPostComponentes(form_name){
+     let form = $('#'+form_name)[0]
+     var data = new  FormData()
      for (var i = 0; i < form.length; i++) {
-         componentes[i] = form[i].id;
+         id = form[i].id;
+         if(id != 'csrf_token') {
+             value = $('#'+id).val()
+             data.append(id, value)
+         }
      }
-     return componentes
+     return data
+}
+
+function cleanComponentes(form_name){
+     let form = $('#'+form_name)[0]
+     for (var i = 0; i < form.length; i++) {
+         id = form[i].id;
+         if(id != 'csrf_token') {
+             $('#'+id).val('');
+         }
+     }
 }
 
 function search(){
@@ -101,10 +116,100 @@ function search(){
 }
 function save(){
     let vista = $('#hdnView').val();
+    let view = '../'+vista+'/save';
+    let form_name = 'form_'+vista;
+    let formData = this.getPostComponentes(form_name);
+     $.ajax({
+         url: view,
+         type: 'POST',
+         dataType: 'json',
+         data:formData,
+         cache:false,
+         processData: false,
+         contentType: false,
+         beforeSend: function() {
+         }
+     })
+     .done(function(respuesta) {
+        var json = JSON.stringify(respuesta['output']);
+        var data = JSON.parse(json);
+        if (!respuesta.error) {
+            alert(data);
+            cleanComponentes(form_name)
+        }else{
+            alert(data);
+        }
+     })
+     .fail(function(resp) {
+         alert('error del sistema, contacte al administrador');
+     })
+     .always(function() {
+         console.log("complete");
+     });
 }
 function update(){
     let vista = $('#hdnView').val();
+    let view = '../'+vista+'/update';
+    let form_name = 'form_'+vista;
+    let formData = this.getPostComponentes(form_name);
+     $.ajax({
+         url: view,
+         type: 'PUT',
+         dataType: 'json',
+         data:formData,
+         cache:false,
+         processData: false,
+         contentType: false,
+         beforeSend: function() {
+         }
+     })
+     .done(function(respuesta) {
+        var json = JSON.stringify(respuesta['output']);
+        var data = JSON.parse(json);
+        if (!respuesta.error) {
+            alert(data);
+            cleanComponentes(form_name)
+        }else{
+            alert(data);
+        }
+     })
+     .fail(function(resp) {
+         alert('error del sistema, contacte al administrador');
+     })
+     .always(function() {
+         console.log("complete");
+     });
 }
 function inactive(){
     let vista = $('#hdnView').val();
+    let view = '../'+vista+'/save';
+    let form_name = 'form_'+vista;
+    let formData = this.getPostComponentes(form_name);
+     $.ajax({
+         url: view,
+         type: 'DELETE',
+         dataType: 'json',
+         data:formData,
+         cache:false,
+         processData: false,
+         contentType: false,
+         beforeSend: function() {
+         }
+     })
+     .done(function(respuesta) {
+        var json = JSON.stringify(respuesta['output']);
+        var data = JSON.parse(json);
+        if (!respuesta.error) {
+            alert(data);
+            cleanComponentes(form_name)
+        }else{
+            alert(data);
+        }
+     })
+     .fail(function(resp) {
+         alert('error del sistema, contacte al administrador');
+     })
+     .always(function() {
+         console.log("complete");
+     });
 }

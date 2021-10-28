@@ -136,9 +136,32 @@ usuario_ctrl = Usuario()
 def homeUsuario():
     return usuario_ctrl.index(session['menu'])
 
-@app.route('/usuarios/save')
+@app.route('/usuarios/save', methods=['POST'])
 def saveUsuario():
-    return usuario_ctrl.save(request)
+    usuario_data = usuario_ctrl.save(request)
+    if usuario_data == True:
+        output = dict(error=False, output=usuario_data)
+    else:
+        output = dict(error=True, output='Usuario no guardado')
+    return output
+
+@app.route('/usuarios/update', methods=['PUT'],)
+def updateUsuario():
+    usuario_data = usuario_ctrl.update(request)
+    if usuario_data == True:
+        output = dict(error=False, output=usuario_data)
+    else:
+        output = dict(error=True, output='Usuario no actualizado')
+    return output
+
+@app.route('/usuarios/delete', methods=['DELETE'])
+def deleteUsuario():
+    usuario_data = usuario_ctrl.update(request)
+    if usuario_data == True:
+        output = dict(error=False, output=usuario_data)
+    else:
+        output = dict(error=True, output='Usuario no eliminado')
+    return output
 
 @app.route('/usuarios/get', methods=['GET'])
 def getUsuario():
